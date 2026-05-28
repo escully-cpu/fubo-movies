@@ -299,6 +299,31 @@
   .last-updated { font-size: 10px; color: #333; text-align: center; margin-top: 22px; letter-spacing: 0.06em; }
   .loading { text-align: center; padding: 60px 20px; color: #555; font-size: 14px; }
 
+  /* A-Z skip rail (right side, fixed) */
+  .az-rail {
+    position: fixed; right: 10px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 0;
+    padding: 6px 4px; border-radius: 10px;
+    background: rgba(22,21,29,0.86);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    z-index: 50;
+    font-size: 10px; font-weight: 700;
+  }
+  .az-letter {
+    cursor: pointer; padding: 2px 6px; border-radius: 3px;
+    color: #888; text-align: center; user-select: none; min-width: 16px;
+    transition: background 0.1s, color 0.1s, opacity 0.1s;
+  }
+  .az-letter:hover:not(.is-disabled) { background: rgba(250,75,19,0.22); color: #fa9669; }
+  .az-letter.is-disabled { opacity: 0.25; cursor: default; }
+  .az-letter.is-active { background: rgba(250,75,19,0.18); color: #fa9669; }
+  @media (max-width: 1200px) { .az-rail { display: none; } }
+  body.theme-light .az-rail { background: rgba(255,255,255,0.92); border-color: rgba(0,0,0,0.08); }
+  body.theme-light .az-letter { color: #777; }
+  body.theme-light .az-letter:hover:not(.is-disabled) { background: rgba(250,75,19,0.13); color: #fa4b13; }
+  body.theme-light .az-letter.is-active { color: #fa4b13; background: rgba(250,75,19,0.1); }
+
   /* ─── Movie detail modal ─── */
   .modal-backdrop {
     position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(3px);
@@ -562,6 +587,36 @@
     <button class="lh-cell lh-avail" data-sort-key="leaving">Availability <span class="lh-arr"></span></button>
   </div>
 
+  <div class="az-rail" id="az-rail" aria-label="Jump to letter">
+    <div class="az-letter" data-letter="#">#</div>
+    <div class="az-letter" data-letter="A">A</div>
+    <div class="az-letter" data-letter="B">B</div>
+    <div class="az-letter" data-letter="C">C</div>
+    <div class="az-letter" data-letter="D">D</div>
+    <div class="az-letter" data-letter="E">E</div>
+    <div class="az-letter" data-letter="F">F</div>
+    <div class="az-letter" data-letter="G">G</div>
+    <div class="az-letter" data-letter="H">H</div>
+    <div class="az-letter" data-letter="I">I</div>
+    <div class="az-letter" data-letter="J">J</div>
+    <div class="az-letter" data-letter="K">K</div>
+    <div class="az-letter" data-letter="L">L</div>
+    <div class="az-letter" data-letter="M">M</div>
+    <div class="az-letter" data-letter="N">N</div>
+    <div class="az-letter" data-letter="O">O</div>
+    <div class="az-letter" data-letter="P">P</div>
+    <div class="az-letter" data-letter="Q">Q</div>
+    <div class="az-letter" data-letter="R">R</div>
+    <div class="az-letter" data-letter="S">S</div>
+    <div class="az-letter" data-letter="T">T</div>
+    <div class="az-letter" data-letter="U">U</div>
+    <div class="az-letter" data-letter="V">V</div>
+    <div class="az-letter" data-letter="W">W</div>
+    <div class="az-letter" data-letter="X">X</div>
+    <div class="az-letter" data-letter="Y">Y</div>
+    <div class="az-letter" data-letter="Z">Z</div>
+  </div>
+
   <div class="grid" id="movie-grid">
     <div class="loading" id="loading">Loading movies…</div>
   </div>
@@ -586,7 +641,7 @@
     <strong>Add-on badges</strong> are inferred from cross-referenced service availability — a title tagged "Starz" requires Fubo's Starz add-on. ·
     <strong>Source:</strong> JustWatch.com · <strong>Updated daily at 9:05 AM</strong>.
   </div>
-  <div class="last-updated">Last updated: May 28, 2026 at 9:17 AM</div>
+  <div class="last-updated">Last updated: May 28, 2026 at 10:28 AM</div>
 </div>
 
 <!-- Movie detail modal — content swapped on each open -->
@@ -630,11 +685,23 @@
     sort: 'score', page: 1, perPage: 120,
   };
 
+  // Article-stripped title for sorting + indexing ("The Silence…" → "silence…")
+  function stripArticle(s) { return s.replace(/^(the|a|an)\s+/i, ''); }
+  function indexLetter(title) {
+    var s = stripArticle(title).trim();
+    if (!s) return '#';
+    var c = s.charAt(0).toUpperCase();
+    if (c >= 'A' && c <= 'Z') return c;
+    return '#';
+  }
+
   // Pre-compute lowercased search blob per movie
   DATA.forEach(function(m, i) {
     m._search = (m.t + ' ' + (m.gn || []).join(' ')).toLowerCase();
     m._origIdx = i;  // for default 'score' sort (already pre-sorted server-side)
     m._titleLc = m.t.toLowerCase();
+    m._sortTitle = stripArticle(m.t).toLowerCase();
+    m._indexLetter = indexLetter(m.t);
     m._netSort = m.a.length ? ADDON_LABEL[m.a[0]].toLowerCase() : 'zzz';
     m._genreSort = (m.g[0] || 'zzz');
     m._bestScore = Math.max((m.im || 0) * 10, m.rt || 0);
@@ -684,8 +751,8 @@
     else if (s === 'year-asc') arr.sort(function(a,b){ return (a.y||9999) - (b.y||9999); });
     else if (s === 'added-desc') arr.sort(function(a,b){ return (b.fs||'').localeCompare(a.fs||''); });
     else if (s === 'leaving-asc') arr.sort(function(a,b){ return a._leaveTs - b._leaveTs; });
-    else if (s === 'title') arr.sort(function(a,b){ return a._titleLc.localeCompare(b._titleLc); });
-    else if (s === 'title-desc') arr.sort(function(a,b){ return b._titleLc.localeCompare(a._titleLc); });
+    else if (s === 'title') arr.sort(function(a,b){ return a._sortTitle.localeCompare(b._sortTitle); });
+    else if (s === 'title-desc') arr.sort(function(a,b){ return b._sortTitle.localeCompare(a._sortTitle); });
     else if (s === 'score-asc') arr.sort(function(a,b){ return a._bestScore - b._bestScore; });
     else if (s === 'net-asc') arr.sort(function(a,b){ return a._netSort.localeCompare(b._netSort); });
     else if (s === 'net-desc') arr.sort(function(a,b){ return b._netSort.localeCompare(a._netSort); });
@@ -778,7 +845,45 @@
     nextBtn.disabled = state.page >= totalPages;
 
     renderActiveFilters();
+    refreshAZRail(visible);
+    window._visibleMovies = visible;  // for the A-Z jump handler
   }
+
+  function refreshAZRail(visible) {
+    var present = Object.create(null);
+    for (var i = 0; i < visible.length; i++) present[visible[i]._indexLetter] = 1;
+    document.querySelectorAll('.az-letter').forEach(function(el) {
+      el.classList.toggle('is-disabled', !present[el.dataset.letter]);
+    });
+  }
+
+  // Click an A-Z letter → set sort to title (A→Z), jump to right page, scroll to first movie
+  document.querySelectorAll('.az-letter').forEach(function(el) {
+    el.addEventListener('click', function() {
+      if (el.classList.contains('is-disabled')) return;
+      var letter = el.dataset.letter;
+      if (state.sort !== 'title') {
+        state.sort = 'title';
+        var sel = document.getElementById('sort-select');
+        if (sel) sel.value = 'title';
+        syncHeaderArrows();
+      }
+      var visible = sortedFiltered();
+      var idx = -1;
+      for (var i = 0; i < visible.length; i++) {
+        if (visible[i]._indexLetter === letter) { idx = i; break; }
+      }
+      if (idx < 0) return;
+      state.page = Math.floor(idx / state.perPage) + 1;
+      render();
+      // After re-render, scroll to the movie's DOM node
+      setTimeout(function() {
+        var firstId = visible[idx].i;
+        var node = document.querySelector('.movie[data-id="' + firstId + '"]');
+        if (node) node.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 30);
+    });
+  });
 
   function renderActiveFilters() {
     var pills = [];
