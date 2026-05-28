@@ -467,7 +467,7 @@
             <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
             <path d="M11 11 L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
-          <input id="movie-search" type="text" placeholder="Search movies…" autocomplete="off" spellcheck="false">
+          <input id="movie-search" type="text" placeholder="Search title, director, cast…" autocomplete="off" spellcheck="false">
           <span class="clear-btn" id="movie-search-clear" title="Clear">×</span>
         </div>
         <button class="theme-toggle" id="theme-toggle" title="Toggle dark/light mode">
@@ -641,7 +641,7 @@
     <strong>Add-on badges</strong> are inferred from cross-referenced service availability — a title tagged "Starz" requires Fubo's Starz add-on. ·
     <strong>Source:</strong> JustWatch.com · <strong>Updated daily at 9:05 AM</strong>.
   </div>
-  <div class="last-updated">Last updated: May 28, 2026 at 10:38 AM</div>
+  <div class="last-updated">Last updated: May 28, 2026 at 10:48 AM</div>
 </div>
 
 <!-- Movie detail modal — content swapped on each open -->
@@ -695,9 +695,14 @@
     return '#';
   }
 
-  // Pre-compute lowercased search blob per movie
+  // Pre-compute lowercased search blob per movie (title, genres, director, cast)
   DATA.forEach(function(m, i) {
-    m._search = (m.t + ' ' + (m.gn || []).join(' ')).toLowerCase();
+    m._search = (
+      m.t + ' ' +
+      (m.gn || []).join(' ') + ' ' +
+      (m.dr || '') + ' ' +
+      (m.ca || []).join(' ')
+    ).toLowerCase();
     m._origIdx = i;  // for default 'score' sort (already pre-sorted server-side)
     m._titleLc = m.t.toLowerCase();
     m._sortTitle = stripArticle(m.t).toLowerCase();
