@@ -193,6 +193,11 @@
 
   /* CARDS view (poster + title + meta) */
   body.view-cards .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  @media (max-width: 600px) {
+    body.view-cards .grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+    body.view-cards .movie-title { font-size: 10.5px; }
+    body.view-cards .movie-meta, body.view-cards .movie-score, body.view-cards .movie-genres { font-size: 9px; }
+  }
   body.view-cards .list-header { display: none; }
   body.view-cards .movie {
     display: flex; flex-direction: column;
@@ -217,6 +222,9 @@
 
   /* POSTERS view (just posters in a tight grid) */
   body.view-posters .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 6px; }
+  @media (max-width: 600px) {
+    body.view-posters .grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 4px; }
+  }
   body.view-posters .list-header { display: none; }
   body.view-posters .movie {
     border-radius: 6px; overflow: hidden;
@@ -347,7 +355,13 @@
   .modal-close:hover { background: rgba(0,0,0,0.7); color: #fff; }
   .modal { max-width: 760px; }
   .modal-body { display: grid; grid-template-columns: 240px 1fr; gap: 0; min-height: 0; flex: 1; overflow: hidden; }
-  @media (max-width: 700px) { .modal-body { grid-template-columns: 1fr; overflow-y: auto; } }
+  /* On phones: keep poster + info side-by-side with a compact poster column.
+     (Previously stacked to 1fr → poster took the whole screen.) */
+  @media (max-width: 700px) {
+    .modal-body { grid-template-columns: 100px 1fr; overflow-y: auto; }
+    .modal-info { padding: 14px 14px 14px; }
+    .modal-info h2 { font-size: 17px; }
+  }
   .modal-poster {
     background: #0a0a0e;
   }
@@ -641,7 +655,7 @@
     <strong>Add-on badges</strong> are inferred from cross-referenced service availability — a title tagged "Starz" requires Fubo's Starz add-on. ·
     <strong>Source:</strong> JustWatch.com · <strong>Updated daily at 9:05 AM</strong>.
   </div>
-  <div class="last-updated">Last updated: May 29, 2026 at 9:11 AM</div>
+  <div class="last-updated">Last updated: May 29, 2026 at 6:37 PM</div>
 </div>
 
 <!-- Movie detail modal — content swapped on each open -->
