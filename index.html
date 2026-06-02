@@ -710,7 +710,7 @@
     <strong>Add-on badges</strong> are inferred from cross-referenced service availability — a title tagged "Starz" requires Fubo's Starz add-on. ·
     <strong>Source:</strong> JustWatch.com · <strong>Updated daily at 9:05 AM</strong>.
   </div>
-  <div class="last-updated">Last updated: June 2, 2026 at 4:27 PM</div>
+  <div class="last-updated">Last updated: June 2, 2026 at 4:33 PM</div>
 </div>
 
 <!-- Movie detail modal — content swapped on each open -->
@@ -1231,11 +1231,13 @@
     // when one exists, search-results URL as a fallback for ambiguous titles).
     var fuboUrl = escapeHtml(m.u);
     var lbUrl = escapeHtml(m.lb || 'https://letterboxd.com/');
+    var lbBtn = (m.tp === 'm')
+      ? '<a class="mi-btn lb-btn" href="' + lbUrl + '" target="_blank" rel="noopener" title="Open on Letterboxd to add to your watchlist">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="vertical-align:-2px"><circle cx="5" cy="12" r="3.5" fill="#00d735"/><circle cx="12" cy="12" r="3.5" fill="#40bcf4"/><circle cx="19" cy="12" r="3.5" fill="#ff8000"/></svg> ' +
+          'View on Letterboxd</a>'
+      : '';
     var btnsHtml =
-      '<a class="mi-btn" href="' + fuboUrl + '" target="_blank" rel="noopener">↗ Open on Fubo</a>' +
-      '<a class="mi-btn lb-btn" href="' + lbUrl + '" target="_blank" rel="noopener" title="Open on Letterboxd to add to your watchlist">' +
-      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="vertical-align:-2px"><circle cx="5" cy="12" r="3.5" fill="#00d735"/><circle cx="12" cy="12" r="3.5" fill="#40bcf4"/><circle cx="19" cy="12" r="3.5" fill="#ff8000"/></svg> ' +
-      'View on Letterboxd</a>';
+      '<a class="mi-btn" href="' + fuboUrl + '" target="_blank" rel="noopener">↗ Open on Fubo</a>' + lbBtn;
 
     // TMDB-sourced rows — only render if data is present
     var directorRow = m.dr
