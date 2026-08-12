@@ -263,13 +263,42 @@
 
   .score-imdb { color: #f5c518; font-weight: 700; }
   .score-rt.fresh { color: #ff6347; }
-  .score-lb {
-    display: inline-flex; align-items: center; padding: 3px 9px;
-    background: rgba(255,255,255,0.05); color: #e8e8e8;
-    border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;
-    font-weight: 600;
+  /* Modal-scoped score chips — tile look shared across services */
+  .mi-scores .score-imdb,
+  .mi-scores .score-rt,
+  .mi-scores .score-lb {
+    display: inline-flex; align-items: center; padding: 4px 10px;
+    border-radius: 5px; font-weight: 700; font-size: 12px;
+    border: 1px solid transparent;
   }
-  body.theme-light .score-lb { background: rgba(0,0,0,0.04); color: #1a1a1a; border-color: rgba(0,0,0,0.1); }
+  .mi-scores .score-imdb {
+    background: rgba(245,197,24,0.12); color: #f5c518;
+    border-color: rgba(245,197,24,0.35);
+  }
+  .mi-scores .score-rt.fresh {
+    background: rgba(255,99,71,0.12); color: #ff6347;
+    border-color: rgba(255,99,71,0.35);
+  }
+  .mi-scores .score-rt.rotten {
+    background: rgba(141,153,136,0.12); color: #8d9988;
+    border-color: rgba(141,153,136,0.35);
+  }
+  .mi-scores .score-lb {
+    background: rgba(255,255,255,0.05); color: #e8e8e8;
+    border-color: rgba(255,255,255,0.15);
+  }
+  body.theme-light .mi-scores .score-imdb {
+    background: rgba(245,197,24,0.18); color: #b48f00; border-color: rgba(245,197,24,0.5);
+  }
+  body.theme-light .mi-scores .score-rt.fresh {
+    background: rgba(255,99,71,0.15); color: #c1452e; border-color: rgba(255,99,71,0.4);
+  }
+  body.theme-light .mi-scores .score-rt.rotten {
+    background: rgba(93,106,91,0.12); color: #5d6a5b; border-color: rgba(93,106,91,0.35);
+  }
+  body.theme-light .mi-scores .score-lb {
+    background: rgba(0,0,0,0.04); color: #1a1a1a; border-color: rgba(0,0,0,0.12);
+  }
   .score-rt.rotten { color: #8d9988; }
   .score-na { color: #444; font-style: italic; }
 
@@ -730,7 +759,7 @@
     <strong>Add-on badges</strong> are inferred from cross-referenced service availability — a title tagged "Starz" requires Fubo's Starz add-on. ·
     <strong>Source:</strong> JustWatch.com · <strong>Updated daily at 9:05 AM</strong>.
   </div>
-  <div class="last-updated">Last updated: August 12, 2026 at 3:03 PM</div>
+  <div class="last-updated">Last updated: August 12, 2026 at 3:21 PM</div>
 </div>
 
 <!-- Movie detail modal — content swapped on each open -->
