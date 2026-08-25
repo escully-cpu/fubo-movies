@@ -951,7 +951,7 @@
     // Poster — wrapped in a link so the whole tile is clickable in Cards/Posters view
     var posterHtml = '<a class="poster" href="' + escapeHtml(m.u) + '" target="_blank" rel="noopener">' +
       (m.p
-        ? '<img loading="lazy" alt="" src="' + POSTER_BASE + escapeHtml(m.p) + '">'
+        ? '<img loading="lazy" alt="" src="' + POSTER_BASE + escapeHtml(m.p) + '" onerror="this.outerHTML=\'<span class=&quot;blank&quot;></span>\'">'
         : '<span class="blank"></span>') +
       '<span class="avail-overlay">' + availHtml + '</span>' +
       (m.tp === 's' ? '<span class="tp-badge">Series</span>' : '') +
@@ -1260,7 +1260,7 @@
   function openModal(m) {
     if (!m) return;
     var posterHtml = m.p
-      ? '<img alt="" src="' + POSTER_BASE + escapeHtml(m.p) + '">'
+      ? '<img alt="" src="' + POSTER_BASE + escapeHtml(m.p) + '" onerror="this.outerHTML=\'<div class=&quot;blank&quot;></div>\'">'
       : '<div class="blank"></div>';
 
     var scoreBits = [];
