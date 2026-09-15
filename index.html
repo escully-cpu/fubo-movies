@@ -960,7 +960,9 @@
     var posterHtml = '<a class="poster" href="' + escapeHtml(m.u) + '" target="_blank" rel="noopener">' +
       (m.p
         ? '<img loading="lazy" alt="" src="' + POSTER_BASE + escapeHtml(m.p) + '"' + (m.p2 ? ' data-p2="' + escapeHtml(m.p2) + '"' : '') + ' onerror="_fp(this)">'
-        : '<span class="blank"></span>') +
+        : (m.p2
+            ? '<img loading="lazy" alt="" src="' + escapeHtml(m.p2) + '" onerror="_fp(this)">'
+            : '<span class="blank"></span>')) +
       '<span class="avail-overlay">' + availHtml + '</span>' +
       (m.tp === 's' ? '<span class="tp-badge">Series</span>' : '') +
     '</a>';
@@ -1269,7 +1271,9 @@
     if (!m) return;
     var posterHtml = m.p
       ? '<img alt="" src="' + POSTER_BASE + escapeHtml(m.p) + '"' + (m.p2 ? ' data-p2="' + escapeHtml(m.p2) + '"' : '') + ' onerror="_fp(this)">'
-      : '<div class="blank"></div>';
+      : (m.p2
+          ? '<img alt="" src="' + escapeHtml(m.p2) + '" onerror="_fp(this)">'
+          : '<div class="blank"></div>');
 
     var scoreBits = [];
     if (m.im) scoreBits.push('<span class="score-imdb">★ ' + m.im.toFixed(1) + (m.cf ? ' Certified Fresh' : '') + '</span>');
